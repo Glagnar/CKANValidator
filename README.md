@@ -3,25 +3,27 @@ Force validation of resources
 
 IMPORTANT:
 
-Set: ckan.auth.create_unowned_dataset = false
+Set: 
+	ckan.auth.create_unowned_dataset = false
 
 **The username below will be granted access to publish datasets**
-*Set: ckan.setstateforpendingvalidation.user = glagnar*
+Set:
+	ckan.setstateforpendingvalidation.user = glagnar*
 
 How 
 
-import urllib2
-import urllib
-import json
-import pprint
-
-**Put the id of the dataset here**
+	import urllib2
+	import urllib
+	import json
+	import pprint
+	
+	#Put the id of the dataset here**
 	dataset_dict = {
         	'id': '5e4ed304-3183-4c09-a606-41f09eadaf5f',
         	'private': False,
 	}
 
-**Use the json module to dump the dictionary to a string for posting.**
+	#Use the json module to dump the dictionary to a string for posting.**
 	data_string = urllib.quote(json.dumps(dataset_dict))
 
 	#Use the URL of the instance here

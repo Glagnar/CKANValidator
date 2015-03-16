@@ -2,11 +2,11 @@
 This extension will make all changes to datasets private. After a validation phase the dataset
 can be made active again by a user with the correct access rights
 
-**IMPORTANT:**
-	ckan.auth.create_unowned_dataset = false
-
+**IMPORTANT Settings:**
 **The username below will be granted access to publish datasets**
 	ckan.setstateforpendingvalidation.user = ***
+	ckan.auth.create_unowned_dataset = false
+	ckan.auth.create_dataset_if_not_in_organization = false
 
 How 
 
@@ -14,33 +14,51 @@ How
 	import urllib
 	import json
 	import pprint
-	
-	#Put the id of the dataset here**
-	dataset_dict = {
-        	'id': '5e4ed304-3183-4c09-a606-41f09eadaf5f',
-        	'private': False,
-	}
 
-	#Use the json module to dump the dictionary to a string for posting.**
-	data_string = urllib.quote(json.dumps(dataset_dict))
 
-	#Use the URL of the instance here
-	request = urllib2.Request('http://localhost:5000/api/action/package_update')
+	# We'll use the package_show function to fetch the dataset
+	fetchrequest = urllib2.Request('http://localhost:5000/api/action/package_show?id=8fe39f59-c218-432c-8796-c2938f228073')
+
+	# Fetching private data and updating it requires an authorization header.
+	# Replace *** with your API key, from your user account on the CKAN site
+	fetchrequest.add_header('Authorization', 'a1b8e735-f3f1-44ac-ac24-5204f1ae3e43')
+
+	# Make the HTTP request.
+	fetchresponse = urllib2.urlopen(fetchrequest)
+
+	assert retchresponse.code == 200
+
+	# Use the json module to load CKAN's response into a dictionary.
+	fetchresponse_dict = json.loads(fetchresponse.read())
+	assert fetchresponse_dict['success'] is True
+
+	# package_create returns the created package as its result. Print this for debugging
+	# datasetpackage = fetchresponse_dict['result']
+	# pprint.pprint(datasetpackage)
+
+	# Set private to false
+	fetchresponse_dict['result']['private'] = False
+
+	data_string = urllib.quote(json.dumps(fetchresponse_dict['result']))
+
+	# Now make a new request to update the dataset
+	updaterequest = urllib2.Request('http://localhost:5000/api/action/package_update')
 
 	# Updating a dataset requires an authorization header.
-	# Replace *** with your API key, from your user account specified for the user at ckan.setstateforpendingvalidation.user
+	# Replace *** with your API key, from your user account on the CKAN site
 	# that you're creating the dataset on.
-	request.add_header('Authorization', '***')
-	
+	updaterequest.add_header('Authorization', 'a1b8e735-f3f1-44ac-ac24-5204f1ae3e43')
+
 	# Make the HTTP request.
-	response = urllib2.urlopen(request, data_string)
-	
-	assert response.code == 200
-	
+	updateresponse = urllib2.urlopen(updaterequest, data_string)
+
+	assert updateresponse.code == 200
+
 	# Use the json module to load CKAN's response into a dictionary.
-	response_dict = json.loads(response.read())
+	updateresponse_dict = json.loads(updateresponse.read())
 	assert response_dict['success'] is True
-	
+
 	# package_create returns the created package as its result.
-	created_package = response_dict['result']
-	pprint.pprint(created_package)
+	updated_package = updateresponse_dict['result']
+	pprint.pprint(updated_package)
+

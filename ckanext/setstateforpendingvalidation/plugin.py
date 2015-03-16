@@ -21,7 +21,7 @@ class SetStateForPendingValidationPlugin(plugins.SingletonPlugin):
 
     # We only need to set private to True for the dataset id specified
     aboutToUpdate = {
-            'private': True,
+        'private': True,
     }
     aboutToUpdate['id'] = data_dict['id']
 

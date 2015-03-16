@@ -1,14 +1,12 @@
 #CKANValidator
-Force validation of resources
+This extension will make all changes to datasets private. After a validation phase the dataset
+can be made active again by a user with the correct access rights
 
-IMPORTANT:
-
-Set: 
+**IMPORTANT:**
 	ckan.auth.create_unowned_dataset = false
 
 **The username below will be granted access to publish datasets**
-Set:
-	ckan.setstateforpendingvalidation.user = glagnar*
+	ckan.setstateforpendingvalidation.user = ***
 
 How 
 

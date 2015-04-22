@@ -19,13 +19,11 @@ class SetStateForPendingValidationPlugin(plugins.SingletonPlugin):
         log.info("User is allowed to publish dataset")
         return
 
-    # We only need to set private to True for the dataset id specified
-
     # Only do this for active datasets, and not ones in draft or deleted state
     # it is also not needed if the dataset is already private
     if 'state' not in data_dict or ( 'state' in data_dict and data_dict['state'] == 'active'):
         if 'private' not in data_dict or ( 'private' in data_dict and data_dict['private'] == False):
-  	    data_dict['private'] = True
+            data_dict['private'] = True
             log.info("CKAN to send %r: ", data_dict)
             toolkit.get_action('package_update')(context, data_dict)
    

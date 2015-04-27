@@ -6,8 +6,16 @@ import ckan.plugins.toolkit as toolkit
 
 log = logging.getLogger(__name__)
 
+def resource_create(context, data_dict = None):
+    log.debug("CKAN resource_created")
+    return {'success': True, 'msg': 'Access needed to see resources'}
+
 class SetStateForPendingValidationPlugin(plugins.SingletonPlugin):
    plugins.implements(plugins.IPackageController, inherit=True)
+   plugins.implements(plugins.IAuthFunctions, inherit=True)
+
+   def get_auth_functions(self):
+        return {'resource_create': resource_create} 
 
    def after_update(self, context, data_dict):
     log.debug("CKAN after_update context: %r", context)
@@ -26,7 +34,3 @@ class SetStateForPendingValidationPlugin(plugins.SingletonPlugin):
             data_dict['private'] = True
             log.info("CKAN to send %r: ", data_dict)
             toolkit.get_action('package_update')(context, data_dict)
-   
-   # Update and create should do the same
-   def after_create(self, context, data_dict):
-    self.after_update(context, data_dict)

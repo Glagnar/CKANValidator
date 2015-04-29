@@ -6,16 +6,8 @@ import ckan.plugins.toolkit as toolkit
 
 log = logging.getLogger(__name__)
 
-def resource_create(context, data_dict = None):
-    log.debug("CKAN resource_created")
-    return {'success': True, 'msg': 'Access needed to see resources'}
-
 class SetStateForPendingValidationPlugin(plugins.SingletonPlugin):
    plugins.implements(plugins.IPackageController, inherit=True)
-   plugins.implements(plugins.IAuthFunctions, inherit=True)
-
-   def get_auth_functions(self):
-        return {'resource_create': resource_create} 
 
    def after_update(self, context, data_dict):
     log.debug("CKAN after_update context: %r", context)
